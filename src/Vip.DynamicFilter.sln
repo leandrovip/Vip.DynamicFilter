@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vip.DynamicFilter", "Vip.DynamicFilter\Vip.DynamicFilter.csproj", "{D63AB372-1216-4A0F-9462-BB05AF245AC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vip.DynamicFilter.Tests", "Vip.DynamicFilter.Tests\Vip.DynamicFilter.Tests.csproj", "{60724780-E4C7-4408-BB23-E114C90DDDD9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vip.DynamicFilter.Tests", "..\tests\Vip.DynamicFilter.Tests\Vip.DynamicFilter.Tests.csproj", "{60724780-E4C7-4408-BB23-E114C90DDDD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

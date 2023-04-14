@@ -10,13 +10,4 @@
     <Copyright>VIP Soluções</Copyright>
     <PackageProjectUrl>https://github.com/leandrovip/Vip.DynamicFilter</PackageProjectUrl>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Core\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="https:\github.com\leandrovip\Vip.DynamicFilter\README.md" />
-  </ItemGroup>
-
 </Project>
