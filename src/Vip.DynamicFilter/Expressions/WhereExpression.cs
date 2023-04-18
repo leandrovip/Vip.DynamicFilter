@@ -92,12 +92,12 @@ namespace Vip.DynamicFilter
         private static Expression GetExpressionForFilterField(Expression e, Filter filter, string suffix)
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
-            if (filter.Operator == Operator.None) return GetExpressionForColumn(e, filter, suffix + "0");
+            if (filter.OperatorType == Operator.None) return GetExpressionForColumn(e, filter, suffix + "0");
             if (!(filter.Filters?.Any() ?? false)) throw new ArgumentException("Filters with operator type different from Operator.None cannot be empty.");
 
             var i = 0;
             var expression = GetExpressionForFilterField(e, filter.Filters[i], suffix + i);
-            var methodInfo = filter.Operator == Operator.And ? _andAlsoMethod : _orElseMethod;
+            var methodInfo = filter.OperatorType == Operator.And ? _andAlsoMethod : _orElseMethod;
             for (i = 1; i < filter.Filters.Count; i++)
             {
                 var args = new object[] {expression, GetExpressionForFilterField(e, filter.Filters[i], suffix + i)};
@@ -110,7 +110,7 @@ namespace Vip.DynamicFilter
         private static Expression GetExpressionForColumn(Expression e, Where filter, string suffix)
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
-            if (filter.Condition == WhereCondition.None || string.IsNullOrWhiteSpace(filter.Column)) throw new ArgumentException("Filter type cannot be None for single filter.");
+            if (filter.ConditionType == WhereCondition.None || string.IsNullOrWhiteSpace(filter.Column)) throw new ArgumentException("Filter type cannot be None for single filter.");
 
             var columnArray = filter.Column.Split('.');
             var prop = e;
@@ -121,7 +121,7 @@ namespace Vip.DynamicFilter
                 {
                     prop = AsQueryable(prop);
                     var generic = _expressionMethod.MakeGenericMethod(prop.Type.GenericTypeArguments.Single());
-                    object[] pars = {Where.New(partColumn, filter.Condition, filter.Value), suffix};
+                    object[] pars = {Where.New(partColumn, filter.ConditionType, filter.Value), suffix};
                     var expr = (Expression) generic.Invoke(null, pars);
 
                     return Expression.Call(_collectionAny2Method.MakeGenericMethod(prop.Type.GenericTypeArguments.First()), prop, expr);
@@ -136,7 +136,7 @@ namespace Vip.DynamicFilter
 
         private static Expression GenerateExpressionByCondition(Expression prop, Where filter)
         {
-            switch (filter.Condition)
+            switch (filter.ConditionType)
             {
                 case WhereCondition.Equal:
                     return Expression.Equal(prop, ToStaticParameterExpressionOfType(TryCastColumnValueType(filter.Value, prop.Type), prop.Type));
@@ -165,6 +165,9 @@ namespace Vip.DynamicFilter
                 case WhereCondition.Contains:
                     return Expression.Call(prop, _containsMethod, Expression.Constant(filter.Value, _stringType));
 
+                case WhereCondition.ContainsIgnoreCase:
+                    return Expression.Call(prop, "Contains", null, Expression.Constant(filter.Value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
+
                 case WhereCondition.NotContains:
                     return Expression.Not(Expression.Call(prop, _containsMethod, Expression.Constant(filter.Value, _stringType)));
 
@@ -191,21 +194,21 @@ namespace Vip.DynamicFilter
                     return Expression.Not(Expression.Equal(prop, ToStaticParameterExpressionOfType(null, prop.Type)));
 
                 case WhereCondition.IsEmpty:
-                    if (prop.Type != typeof(string)) throw new InvalidCastException($"{filter.Condition} can be applied to String type only");
+                    if (prop.Type != typeof(string)) throw new InvalidCastException($"{filter.ConditionType} can be applied to String type only");
                     return Expression.Equal(prop, ToStaticParameterExpressionOfType(string.Empty, prop.Type));
 
                 case WhereCondition.IsNotEmpty:
-                    if (prop.Type != typeof(string)) throw new InvalidCastException($"{filter.Condition} can be applied to String type only");
+                    if (prop.Type != typeof(string)) throw new InvalidCastException($"{filter.ConditionType} can be applied to String type only");
                     return Expression.Not(Expression.Equal(prop, ToStaticParameterExpressionOfType(string.Empty, prop.Type)));
 
                 case WhereCondition.IsNullOrEmpty:
-                    if (prop.Type != typeof(string)) throw new InvalidCastException($"{filter.Condition} can be applied to String type only");
+                    if (prop.Type != typeof(string)) throw new InvalidCastException($"{filter.ConditionType} can be applied to String type only");
                     return Expression.OrElse(
                         Expression.Equal(prop, ToStaticParameterExpressionOfType(null, prop.Type)),
                         Expression.Equal(prop, ToStaticParameterExpressionOfType(string.Empty, prop.Type)));
 
                 case WhereCondition.IsNotNullOrEmpty:
-                    if (prop.Type != typeof(string)) throw new InvalidCastException($"{filter.Condition} can be applied to String type only");
+                    if (prop.Type != typeof(string)) throw new InvalidCastException($"{filter.ConditionType} can be applied to String type only");
                     return Expression.Not(
                         Expression.OrElse(
                             Expression.Equal(prop, ToStaticParameterExpressionOfType(null, prop.Type)),

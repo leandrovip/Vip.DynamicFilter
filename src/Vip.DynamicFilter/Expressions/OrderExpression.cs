@@ -65,8 +65,8 @@ namespace Vip.DynamicFilter
             var delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
             Expression lambda = Expression.Lambda(delegateType, expr, arg);
             var m = step == OrderStep.First
-                ? sort.Direction == OrderDirection.Asc ? QueryableOrderBy : QueryableOrderByDescending
-                : sort.Direction == OrderDirection.Asc
+                ? sort.DirectionType == OrderDirection.Asc ? QueryableOrderBy : QueryableOrderByDescending
+                : sort.DirectionType == OrderDirection.Asc
                     ? QueryableThenBy
                     : QueryableThenByDescending;
 

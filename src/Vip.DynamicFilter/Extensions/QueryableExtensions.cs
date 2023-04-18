@@ -5,18 +5,18 @@ namespace Vip.DynamicFilter
 {
     public static class QueryableExtensions
     {
-        public static IQueryable<T> RequestBuild<T>(this IQueryable<T> query, FilterRequest request)
+        public static IQueryable<T> ApplyFilterRequest<T>(this IQueryable<T> query, FilterRequest request)
         {
             IQueryable<T> res = query.Where(request.Where).OrderBy(request.OrderBy);
-            if (request.PageNumber >= 0) res = res.Skip(request.PageNumber * request.Limit);
+            if (request.PageNumber > 0) res = res.Skip((request.PageNumber - 1) * request.Limit);
             if (request.Limit > 0) res = res.Take(request.Limit);
 
             return res;
         }
 
-        public static IQueryable<T> RequestBuild<T>(this IEnumerable<T> query, FilterRequest request)
+        public static IQueryable<T> ApplyFilterRequest<T>(this IEnumerable<T> query, FilterRequest request)
         {
-            return query.AsQueryable().RequestBuild(request);
+            return query.AsQueryable().ApplyFilterRequest(request);
         }
 
         public static IQueryable<T> Where<T>(this IQueryable<T> query, Where filter)

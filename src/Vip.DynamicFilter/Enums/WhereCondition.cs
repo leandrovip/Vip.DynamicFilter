@@ -4,7 +4,7 @@ namespace Vip.DynamicFilter
 {
     public enum WhereCondition
     {
-        None,
+        [Description("none")] None,
         [Description("=")] Equal,
         [Description("!=")] NotEqual,
         [Description("<")] LessThan,
@@ -12,6 +12,7 @@ namespace Vip.DynamicFilter
         [Description("<=")] LessThanOrEqual,
         [Description(">=")] GreaterThanOrEqual,
         [Description("~")] Contains,
+        [Description("~~")] ContainsIgnoreCase,
         [Description("!~")] NotContains,
         [Description("*~")] StartsWith,
         [Description("!*~")] NotStartsWith,
