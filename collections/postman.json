@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "6e9f36da-2d5d-49a0-b434-939517b5f885",
+		"name": "Vip.DynamicFilter",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26806833",
+		"_collection_link": "https://vipsolucoes.postman.co/workspace/VIP-Solu%25C3%25A7%25C3%25B5es~b0988508-5aa7-4126-8618-5195d3b1d6e4/collection/26806833-6e9f36da-2d5d-49a0-b434-939517b5f885?action=share&creator=26806833&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "All Clients",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Name",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"where\": {\r\n    \"column\": \"name\",\r\n    \"value\": \"batman Ribeiro\",\r\n    \"condition\": \"~~\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Name and Age",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"where\": {\r\n        \"operator\": \"and\",\r\n        \"filters\": [\r\n            {\r\n                \"column\": \"name\",\r\n                \"condition\": \"~~\",\r\n                \"value\": \"batman\"\r\n            },\r\n            {\r\n                \"column\": \"age\",\r\n                \"condition\": \"=\",\r\n                \"value\": 10\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Name or Name",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"where\": {\r\n        \"operator\": \"or\",\r\n        \"filters\": [\r\n            {\r\n                \"column\": \"name\",\r\n                \"condition\": \"~~\",\r\n                \"value\": \"batman\"\r\n            },\r\n            {\r\n                \"column\": \"name\",\r\n                \"condition\": \"=\",\r\n                \"value\": \"Joao\"\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Order By Age",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"orderBy\": [{\r\n        \"column\": \"age\",\r\n        \"direction\": \"desc\"\r\n    }]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paging One",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"orderBy\": [\r\n        {\r\n            \"column\": \"age\",\r\n            \"direction\": \"desc\"\r\n        }\r\n    ],\r\n    \"pageNumber\": 1,\r\n    \"limit\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paging Two",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"orderBy\": [\r\n        {\r\n            \"column\": \"age\",\r\n            \"direction\": \"desc\"\r\n        }\r\n    ],\r\n    \"pageNumber\": 2,\r\n    \"limit\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

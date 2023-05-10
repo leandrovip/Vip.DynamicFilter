@@ -157,25 +157,25 @@ namespace Vip.DynamicFilter
                     return Expression.GreaterThanOrEqual(prop, ToStaticParameterExpressionOfType(TryCastColumnValueType(filter.Value, prop.Type), prop.Type));
 
                 case WhereCondition.StartsWith:
-                    return Expression.Call(prop, _startsWithMethod, Expression.Constant(filter.Value, _stringType));
+                    return Expression.Call(prop, _startsWithMethod, Expression.Constant(filter.Value.ToString(), _stringType));
 
                 case WhereCondition.NotStartsWith:
-                    return Expression.Not(Expression.Call(prop, _startsWithMethod, Expression.Constant(filter.Value, _stringType)));
+                    return Expression.Not(Expression.Call(prop, _startsWithMethod, Expression.Constant(filter.Value.ToString(), _stringType)));
 
                 case WhereCondition.Contains:
-                    return Expression.Call(prop, _containsMethod, Expression.Constant(filter.Value, _stringType));
+                    return Expression.Call(prop, _containsMethod, Expression.Constant(filter.Value.ToString(), _stringType));
 
                 case WhereCondition.ContainsIgnoreCase:
-                    return Expression.Call(prop, "Contains", null, Expression.Constant(filter.Value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
+                    return Expression.Call(prop, "Contains", null, Expression.Constant(filter.Value.ToString(), _stringType), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
 
                 case WhereCondition.NotContains:
-                    return Expression.Not(Expression.Call(prop, _containsMethod, Expression.Constant(filter.Value, _stringType)));
+                    return Expression.Not(Expression.Call(prop, _containsMethod, Expression.Constant(filter.Value.ToString(), _stringType)));
 
                 case WhereCondition.EndsWith:
-                    return Expression.Call(prop, _endsWithMethod, Expression.Constant(filter.Value, _stringType));
+                    return Expression.Call(prop, _endsWithMethod, Expression.Constant(filter.Value.ToString(), _stringType));
 
                 case WhereCondition.NotEndsWith:
-                    return Expression.Not(Expression.Call(prop, _endsWithMethod, Expression.Constant(filter.Value, _stringType)));
+                    return Expression.Not(Expression.Call(prop, _endsWithMethod, Expression.Constant(filter.Value.ToString(), _stringType)));
 
                 case WhereCondition.Any:
                     if (prop.IsEnumerable()) prop = AsQueryable(prop);
@@ -234,10 +234,10 @@ namespace Vip.DynamicFilter
                 throw new InvalidCastException($"Cannot convert value to type {type.Name}.");
 
             var valueType = value.GetType();
-
             if (valueType == type) return value;
-            if (type.GetTypeInfo().BaseType == typeof(Enum))
-                return Enum.Parse(type, Convert.ToString(value));
+
+            if (type == typeof(string)) return Convert.ToString(value);
+            if (type.GetTypeInfo().BaseType == typeof(Enum)) return Enum.Parse(type, Convert.ToString(value));
 
             var s = Convert.ToString(value);
             object res;
