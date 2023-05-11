@@ -14,6 +14,8 @@ public class FilterResponse<T>
         Limit = limit;
     }
 
+    public FilterResponse(IEnumerable<T> data) : this(data, 0, 0, 0) { }
+
     #endregion
 
     #region Properties
