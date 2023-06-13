@@ -98,6 +98,56 @@ public class WhereTests
         Assert.NotEmpty(filteredResult);
     }
 
+
+    [Fact]
+    public void WhereTests_ApplyFilterRequest_WhenTwoListOfFilterInputsWithNestedValueArePassed_ShouldReturnFilteredQueryable()
+    {
+        // Arrange
+        var request = new FilterRequest
+        {
+            Where = new Filter
+            {
+                OperatorType = Operator.And,
+                Filters = new List<Filter>
+                {
+                    new()
+                    {
+                        Column = "Name",
+                        ConditionType = WhereCondition.Contains,
+                        Value = "Silva"
+                    },
+                    new()
+                    {
+                        OperatorType = Operator.Or,
+                        Filters = new List<Filter>
+                        {
+                            new()
+                            {
+                                Column = "Age",
+                                ConditionType = WhereCondition.Equal,
+                                Value = "22"
+                            },
+                            new()
+                            {
+                                Column = "Age",
+                                ConditionType = WhereCondition.Equal,
+                                Value = "25"
+                            }
+                        }
+                    }
+                },
+            }
+        };
+
+        // Act
+        var filteredResult = Mock.Clients.ApplyFilterRequest(request);
+        var normalResult = Mock.Clients.Where(p => (p.Name.Contains("Silva")) && (p.Age == 22 || p.Age == 25));
+
+        // Assert
+        Helper.EnumarableAreEqual(filteredResult, normalResult);
+        Assert.NotEmpty(filteredResult);
+    }
+
     [Fact]
     public void WhereTests_ApplyFilterRequest_WhenListOfFilterInputsWithNestedValueArePassedContainsInsensitive_ShouldReturnFilteredQueryable()
     {
