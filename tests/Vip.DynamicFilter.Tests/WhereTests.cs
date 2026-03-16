@@ -1,4 +1,5 @@
 ﻿using Vip.DynamicFilter.Tests.Core;
+using Vip.DynamicFilter.Tests.Models;
 using Xunit;
 
 namespace Vip.DynamicFilter.Tests;
@@ -178,6 +179,60 @@ public class WhereTests
         // Act
         var filteredResult = Mock.Clients.ApplyFilterRequest(request);
         var normalResult = Mock.Clients.Where(p => p.Age >= 5 && p.Address.Any(a => a.Street.Contains("rua das palmeiras", StringComparison.InvariantCultureIgnoreCase)));
+
+        // Assert
+        Helper.EnumarableAreEqual(filteredResult, normalResult);
+        Assert.NotEmpty(filteredResult);
+    }
+
+    [Fact]
+    public void WhereTests_ApplyFilterRequest_WhentInputEnumType()
+    {
+        // Arrange
+        var request = new FilterRequest
+        {
+            Where = new Filter
+            {
+                OperatorType = Operator.And,
+                Filters = new List<Filter>
+                {
+                    new()
+                    {
+                        Column = "ClientType",
+                        ConditionType = WhereCondition.Equal,
+                        Value = "Servico"
+                    }
+                }
+            }
+        };
+
+        // Act
+        var filteredResult = Mock.Clients.ApplyFilterRequest(request);
+        var normalResult = Mock.Clients.Where(p => p.ClientType.Equals(ClientEnum.Servico));
+
+        // Assert
+        Helper.EnumarableAreEqual(filteredResult, normalResult);
+        Assert.NotEmpty(filteredResult);
+    }
+
+    [Fact]
+    public void WhereTests_ApplyFilterRequest_WhenWhereIsNull()
+    {
+        // Arrange
+        var request = new FilterRequest()
+        {
+            Where = null,
+            OrderBy = new List<Order>()
+            {
+                new Order("Age", OrderDirection.Asc)
+            },
+            Limit = 10,
+            PageNumber = -1
+        };
+
+        // Act
+        var filteredResult = Mock.Clients.ApplyFilterRequest(request);
+        var normalResult = Mock.Clients.OrderBy(x => x.Age).Take(10);
 
         // Assert
         Helper.EnumarableAreEqual(filteredResult, normalResult);

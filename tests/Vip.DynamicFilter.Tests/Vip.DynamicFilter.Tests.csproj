@@ -27,8 +27,4 @@
     <ProjectReference Include="..\..\src\Vip.DynamicFilter\Vip.DynamicFilter.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>

@@ -10,13 +10,14 @@ public class Client
     public string Name { get; set; }
     public int Age { get; set; }
     public DateTime Birthday { get; set; }
+    public ClientEnum ClientType { get; set; }
     public ICollection<Address> Address { get; set; }
 
     #endregion
 
     #region Constructor
 
-    public Client(string name, int age, string street)
+    public Client(string name, int age, string street, ClientEnum clientType)
     {
         var faker = new Faker("pt_BR");
 
@@ -24,6 +25,7 @@ public class Client
         Name = name;
         Age = age;
         Birthday = DateTime.Now.AddDays(age * -1);
+        ClientType = clientType;
         Address = new List<Address>
         {
             new(ClientId, street + " 1", faker.Address.City(), faker.Random.Int(1, 35)),

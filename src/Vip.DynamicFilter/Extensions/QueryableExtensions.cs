@@ -7,8 +7,12 @@ namespace Vip.DynamicFilter
     {
         public static IQueryable<T> ApplyFilterRequest<T>(this IQueryable<T> query, FilterRequest request)
         {
-            IQueryable<T> res = query.Where(request.Where).OrderBy(request.OrderBy);
-            if (request.PageNumber > 0) res = res.Skip((request.PageNumber - 1) * request.Limit);
+            request = request ?? new FilterRequest();
+
+            var res = query;
+            if (request.Where != null) res = res.Where(request.Where);
+            if (request.OrderBy != null) res = res.OrderBy(request.OrderBy);
+            if (request.PageNumber > 0 && request.Limit > 0) res = res.Skip((request.PageNumber - 1) * request.Limit);
             if (request.Limit > 0) res = res.Take(request.Limit);
 
             return res;
@@ -26,7 +30,8 @@ namespace Vip.DynamicFilter
 
         public static IQueryable<T> Where<T>(this IEnumerable<T> query, Where filter)
         {
-            return filter != null ? query.AsQueryable().Where(filter.GetExpression<T>()) : query.AsQueryable();
+            var queryable = query.AsQueryable();
+            return filter != null ? queryable.Where(filter.GetExpression<T>()) : queryable;
         }
 
         public static IQueryable<T> Where<T>(this IQueryable<T> query, Filter filter)
@@ -36,44 +41,60 @@ namespace Vip.DynamicFilter
 
         public static IQueryable<T> Where<T>(this IEnumerable<T> query, Filter filter)
         {
-            return filter != null ? query.AsQueryable().Where(filter.GetFilterExpression<T>()) : query.AsQueryable();
+            var queryable = query.AsQueryable();
+            return filter != null ? queryable.Where(filter.GetFilterExpression<T>()) : queryable;
         }
 
-        public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> query, Order sort)
+        public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, Order sort)
         {
-            return sort != null ? sort.GetOrderedQueryable(query, OrderStep.First) : (IOrderedQueryable<T>) query;
+            return sort != null ? sort.GetOrderedQueryable(query, OrderStep.First) : query;
         }
 
-        public static IOrderedQueryable<T> OrderBy<T>(this IEnumerable<T> query, Order order)
+        public static IQueryable<T> OrderBy<T>(this IEnumerable<T> query, Order order)
         {
-            return order != null ? order.GetOrderedQueryable(query.AsQueryable(), OrderStep.First) : (IOrderedQueryable<T>) query.AsQueryable();
+            var queryable = query.AsQueryable();
+            return order != null ? order.GetOrderedQueryable(queryable, OrderStep.First) : queryable;
         }
 
-        public static IOrderedQueryable<T> ThenBy<T>(this IQueryable<T> query, Order order)
+        public static IQueryable<T> ThenBy<T>(this IQueryable<T> query, Order order)
         {
-            return order != null ? order.GetOrderedQueryable(query, OrderStep.Next) : (IOrderedQueryable<T>) query;
+            if (order == null) return query;
+            if (query is IOrderedQueryable<T> orderedQuery) return order.GetOrderedQueryable(orderedQuery, OrderStep.Next);
+
+            return order.GetOrderedQueryable(query, OrderStep.First);
         }
 
-        public static IOrderedQueryable<T> ThenBy<T>(this IEnumerable<T> query, Order order)
+        public static IQueryable<T> ThenBy<T>(this IEnumerable<T> query, Order order)
         {
-            return order != null ? order.GetOrderedQueryable(query.AsQueryable(), OrderStep.Next) : (IOrderedQueryable<T>) query.AsQueryable();
+            return query.AsQueryable().ThenBy(order);
         }
 
-        public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> query, IEnumerable<Order> orders)
+        public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, IEnumerable<Order> orders)
         {
-            var res = (IOrderedQueryable<T>) query;
-            var step = OrderStep.First;
-            if (orders != null)
-                foreach (var filter in orders)
+            if (orders == null) return query;
+
+            IOrderedQueryable<T> orderedQuery = null;
+            var first = true;
+
+            foreach (var order in orders)
+            {
+                if (order == null) continue;
+
+                if (first)
                 {
-                    res = filter.GetOrderedQueryable(res, step);
-                    step = OrderStep.Next;
+                    orderedQuery = order.GetOrderedQueryable(query, OrderStep.First);
+                    first = false;
                 }
+                else
+                {
+                    orderedQuery = order.GetOrderedQueryable(orderedQuery, OrderStep.Next);
+                }
+            }
 
-            return res;
+            return orderedQuery ?? query;
         }
 
-        public static IOrderedQueryable<T> OrderBy<T>(this IEnumerable<T> query, IEnumerable<Order> orders)
+        public static IQueryable<T> OrderBy<T>(this IEnumerable<T> query, IEnumerable<Order> orders)
         {
             return query.AsQueryable().OrderBy(orders);
         }
