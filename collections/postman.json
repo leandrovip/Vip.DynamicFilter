@@ -202,6 +202,511 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Filter by Exact Name",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"where\": {\r\n    \"column\": \"name\",\r\n    \"condition\": \"=\",\r\n    \"value\": \"Jose da Silva\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Age Range",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"where\": {\r\n        \"operator\": \"and\",\r\n        \"filters\": [\r\n            {\r\n                \"column\": \"age\",\r\n                \"condition\": \">=\",\r\n                \"value\": 14\r\n            },\r\n            {\r\n                \"column\": \"age\",\r\n                \"condition\": \"<=\",\r\n                \"value\": 25\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Enum ClientType",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"where\": {\r\n    \"column\": \"clientType\",\r\n    \"condition\": \"=\",\r\n    \"value\": \"Servico\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Nested Address",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"where\": {\r\n    \"column\": \"address.street\",\r\n    \"condition\": \"~\",\r\n    \"value\": \"Rua das Palmeiras\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Nested Address IgnoreCase",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"where\": {\r\n    \"column\": \"address.street\",\r\n    \"condition\": \"~~\",\r\n    \"value\": \"rua\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Client with Address",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"where\": {\r\n    \"column\": \"address\",\r\n    \"condition\": \"any\",\r\n    \"value\": null\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Client without Address",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"where\": {\r\n    \"column\": \"address\",\r\n    \"condition\": \"!any\",\r\n    \"value\": null\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Birthday Before",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"where\": {\r\n    \"column\": \"birthday\",\r\n    \"condition\": \"<\",\r\n    \"value\": \"1990-01-01\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Name StartsWith",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"where\": {\r\n    \"column\": \"name\",\r\n    \"condition\": \"*~\",\r\n    \"value\": \"J\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Name EndsWith",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"where\": {\r\n    \"column\": \"name\",\r\n    \"condition\": \"~*\",\r\n    \"value\": \"Silva\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Name NotContains",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"where\": {\r\n    \"column\": \"name\",\r\n    \"condition\": \"!~\",\r\n    \"value\": \"batman\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Name NotNull",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"where\": {\r\n    \"column\": \"name\",\r\n    \"condition\": \"notnull\",\r\n    \"value\": null\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Id",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"where\": {\r\n    \"column\": \"clientId\",\r\n    \"condition\": \"=\",\r\n    \"value\": \"00000000-0000-0000-0000-000000000000\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Nested And Or",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"where\": {\r\n        \"operator\": \"and\",\r\n        \"filters\": [\r\n            {\r\n                \"column\": \"name\",\r\n                \"condition\": \"~\",\r\n                \"value\": \"Silva\"\r\n            },\r\n            {\r\n                \"operator\": \"or\",\r\n                \"filters\": [\r\n                    {\r\n                        \"column\": \"age\",\r\n                        \"condition\": \"=\",\r\n                        \"value\": 22\r\n                    },\r\n                    {\r\n                        \"column\": \"age\",\r\n                        \"condition\": \"=\",\r\n                        \"value\": 25\r\n                    }\r\n                ]\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Order By Multiple",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"orderBy\": [\r\n        {\r\n            \"column\": \"age\",\r\n            \"direction\": \"desc\"\r\n        },\r\n        {\r\n            \"column\": \"name\",\r\n            \"direction\": \"asc\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Full Request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"where\": {\r\n        \"operator\": \"and\",\r\n        \"filters\": [\r\n            {\r\n                \"column\": \"age\",\r\n                \"condition\": \">=\",\r\n                \"value\": 35\r\n            },\r\n            {\r\n                \"column\": \"age\",\r\n                \"condition\": \"<=\",\r\n                \"value\": 56\r\n            }\r\n        ]\r\n    },\r\n    \"orderBy\": [\r\n        {\r\n            \"column\": \"name\",\r\n            \"direction\": \"desc\"\r\n        }\r\n    ],\r\n    \"pageNumber\": 2,\r\n    \"limit\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query ApplyFilterRequest",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"where\": {\r\n        \"column\": \"name\",\r\n        \"condition\": \"~~\",\r\n        \"value\": \"silva\"\r\n    },\r\n    \"orderBy\": [\r\n        {\r\n            \"column\": \"age\",\r\n            \"direction\": \"desc\"\r\n        }\r\n    ],\r\n    \"limit\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients/query",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter Addresses",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"where\": {\r\n        \"column\": \"street\",\r\n        \"condition\": \"*~\",\r\n        \"value\": \"Rua\"\r\n    },\r\n    \"orderBy\": [\r\n        {\r\n            \"column\": \"zipCode\",\r\n            \"direction\": \"asc\"\r\n        }\r\n    ],\r\n    \"pageNumber\": 1,\r\n    \"limit\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/addresses",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"addresses"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
