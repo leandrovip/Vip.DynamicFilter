@@ -1,12 +1,29 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.Json;
 using Vip.DynamicFilter;
+using Vip.DynamicFilter.DemoApi.Data;
+using Vip.DynamicFilter.DemoApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+#region Configuration
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Serialização camelCase + enums como string (recomendado para receber/enviar os tokens do DynamicFilter)
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
+#endregion
+
 var app = builder.Build();
 
-#region Configuration
+#region Middlewares
 
 if (app.Environment.IsDevelopment())
 {
@@ -18,39 +35,32 @@ app.UseHttpsRedirection();
 
 #endregion
 
-#region Arrange
+#region Data
 
-var clients = new List<Client>
-{
-    new("Batman Ribeiro", 10),
-    new("Lindsey", 12),
-    new("Joao", 15),
-    new("Jose da Silva", 25),
-    new("Bruce Wayne", 35),
-    new("Amir", 56)
-};
+var clients = Seed.Clients;
+var addresses = Seed.Addresses;
 
 #endregion
 
 #region Routes
 
-app.MapPost("/clients", (FilterRequest filter) =>
-{
-    var teste = clients.GetFilterResponse(filter);
-    return teste;
-}).WithOpenApi();
+app.MapGet("/", () => "Vip.DynamicFilter Demo API — consulte /swagger para testar.");
+
+// Lista todos os clientes
+app.MapGet("/clients", () => clients).WithOpenApi();
+
+// Busca cliente por Id
+app.MapGet("/clients/{id:guid}", (Guid id) => clients.FirstOrDefault(x => x.ClientId == id)).WithOpenApi();
+
+// Aplica filtro + ordenação + paginação e retorna FilterResponse<T> (com total de registros)
+app.MapPost("/clients", (FilterRequest filter) => clients.GetFilterResponse(filter)).WithOpenApi();
+
+// Aplica filtro + ordenação + paginação e retorna apenas a lista (IQueryable materializado)
+app.MapPost("/clients/query", (FilterRequest filter) => clients.ApplyFilterRequest(filter).ToList()).WithOpenApi();
+
+// Aplica filtro sobre os endereços (demonstra uso com outro tipo)
+app.MapPost("/addresses", (FilterRequest filter) => addresses.GetFilterResponse(filter)).WithOpenApi();
+
+#endregion
 
 app.Run();
-
-#endregion
-
-#region Classes
-
-internal record Client(string Name, int Age)
-{
-    public Guid ClientId { get; set; } = Guid.NewGuid();
-    public string Name { get; set; } = Name;
-    public int Age { get; set; } = Age;
-}
-
-#endregion
