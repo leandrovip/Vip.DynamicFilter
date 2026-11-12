@@ -17,6 +17,9 @@ Resumo dos comportamentos, defaults e casos de borda da biblioteca.
 | Situação | Exceção |
 |---|---|
 | `Column` vazia ou `ConditionType == None` em filtro simples | `ArgumentException` — "Filter type cannot be None for single filter." |
+| `Condition` com valor que não é token nem nome de `WhereCondition` | `ArgumentException` — "Condition '{valor}' is not recognized for column '{coluna}'." |
+| `Operator` diferente de `and` / `or` / `none` | `ArgumentException` — "Operator '{valor}' is not recognized." |
+| `Direction` diferente de `asc` / `desc` | `ArgumentException` — "Direction '{valor}' is not recognized for column '{coluna}'." |
 | Operador `And`/`Or` com `Filters` vazio | `ArgumentException` — "Filters with operator type different from Operator.None cannot be empty." |
 | `Filter`/`Where`/`Order` nulos passados às extensões | Ignorados (sem erro), com exceção dos métodos internos |
 | Propriedade não encontrada (case-insensitive) | `InvalidOperationException` — "Property '{name}' not found on type '{type}'" |

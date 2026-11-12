@@ -65,6 +65,26 @@ var where = Where.New("Name", WhereCondition.Contains, "Silva");
 
 > Condições de string (`isempty`, `notempty`, `isnullorempty`, `notnullorempty`) e as de substring (`~`, `~~`, `!~`, `*~`, `!*~`, `~*`, `!~*`) só podem ser aplicadas a propriedades do tipo `string`. Caso contrário é lançado `InvalidCastException`.
 
+### Token ou nome do enum
+
+`condition` aceita tanto o **token** quanto o **nome do enum**, sem diferenciar maiúsculas e ignorando espaços nas pontas. As duas formas abaixo são equivalentes:
+
+```csharp
+new Filter { Column = "Age", Condition = ">=", Value = 18 };
+new Filter { Column = "Age", Condition = "GreaterThanOrEqual", Value = 18 };
+// ambos equivalem a ConditionType = WhereCondition.GreaterThanOrEqual
+```
+
+```json
+{ "where": { "column": "age", "condition": ">=", "value": 18 } }
+```
+
+```json
+{ "where": { "column": "age", "condition": "GreaterThanOrEqual", "value": 18 } }
+```
+
+Um valor que não é token nem nome de `WhereCondition` lança `ArgumentException` ao aplicar o filtro, informando o valor recebido e a coluna: `Condition 'maiorque' is not recognized for column 'age'.`
+
 ## Exemplos de cada condição
 
 ### `=` Igual

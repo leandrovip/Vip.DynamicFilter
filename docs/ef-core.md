@@ -34,9 +34,11 @@ var result = await query.ToListAsync();
 ## Com resposta paginada
 
 ```csharp
-var response = await _context.Clients.GetFilterResponse(request);
+var response = _context.Clients.GetFilterResponse(request);
 // response.TotalCount já conta os registros filtrados antes da paginação
 ```
+
+> `GetFilterResponse` é **síncrono** (executa `Count()` e `ToList()`); não há versão `async`. Para materializar de forma assíncrona, veja [seguranca-e-performance.md](seguranca-e-performance.md#performance).
 
 ## Em um Controller
 
@@ -50,9 +52,9 @@ public class ClientsController : ControllerBase
     public ClientsController(AppDbContext context) => _context = context;
 
     [HttpPost("query")]
-    public async Task<FilterResponse<Client>> Query([FromBody] FilterRequest request)
+    public FilterResponse<Client> Query([FromBody] FilterRequest request)
     {
-        return await _context.Clients.GetFilterResponse(request);
+        return _context.Clients.GetFilterResponse(request);
     }
 }
 ```

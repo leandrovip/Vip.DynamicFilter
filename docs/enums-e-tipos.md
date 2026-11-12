@@ -92,7 +92,7 @@ var filter = new Filter("IsActive", WhereCondition.Equal, "true");
 1. Se o tipo do `Value` já é o mesmo da propriedade, é usado como está.
 2. Para `string`, o valor é convertido via `Convert.ToString`.
 3. Para `enum`, usa `Enum.Parse` (nome ou valor numérico).
-4. Para os demais tipos, usa `TryParse` da cultura invariante (números, datas, `Guid`, `bool`, ...).
+4. Para os demais tipos, usa `TryParse(string, out T)` (números, datas, `Guid`, `bool`, ...), que respeita a **cultura corrente da thread** — `"10.5"` vira `105` em pt-BR. Veja [matriz-de-comportamentos.md](matriz-de-comportamentos.md#cultura).
 5. Falha na conversão lança `InvalidCastException` com a mensagem `Cannot convert value to type {type}.`
 
 ## Referência
