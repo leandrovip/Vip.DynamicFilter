@@ -17,6 +17,10 @@ jobs:
   deploy-package:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
@@ -47,5 +51,17 @@ jobs:
       - name: Create Package
         run: dotnet pack ./src/Vip.DynamicFilter/Vip.DynamicFilter.csproj --configuration Release -p:Version=$VERSION_PACKAGE
 
+      # Autenticação federada NuGet.org via OIDC
+      - name: NuGet Login (Trusted Publishing)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      # Publicação utilizando a API Key temporária
       - name: Publish Package
-        run: dotnet nuget push ./src/Vip.DynamicFilter/bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json
+        run: |
+          dotnet nuget push ./src/Vip.DynamicFilter/bin/Release/*.nupkg \
+            --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
