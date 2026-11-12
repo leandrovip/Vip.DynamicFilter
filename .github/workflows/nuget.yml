@@ -8,35 +8,35 @@ on:
         required: false
 
 env:
-  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-  # Stop wasting time caching packages
+  # Não exibe a mensagem de boas-vindas nem popula o cache na primeira execução
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  # Disable sending usage data to Microsoft
-  DOTNET_CLI_TELEMETRY_OPTOUT: false
+  # Não envia dados de uso para a Microsoft
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
 
 jobs:
   deploy-package:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "Checkout branch develop"
-        uses: actions/checkout@main
+      - name: "Checkout"
+        uses: actions/checkout@v4
 
-      - name: "Set Project Version"
-        run: echo ::set-env name=VERSION_PROJECT::1.0.${GITHUB_RUN_NUMBER}
-
-      - name: "Set Package Version"
-        run: echo ::set-env name=VERSION_PACKAGE::${VERSION_PROJECT}${{ github.event.inputs.typeBuild }}
+      - name: "Set Versions"
+        env:
+          TYPE_BUILD: ${{ github.event.inputs.typeBuild }}
+        run: |
+          echo "VERSION_PROJECT=1.0.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
+          echo "VERSION_PACKAGE=1.0.${GITHUB_RUN_NUMBER}${TYPE_BUILD}" >> "$GITHUB_ENV"
 
       - name: "Variables Test"
         run: |
-          echo Version: $VERSION_PROJECT
-          echo Version2: $VERSION_PACKAGE
+          echo "Version: $VERSION_PROJECT"
+          echo "Version2: $VERSION_PACKAGE"
 
       - name: "Setup .NET"
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "7.0.x"
+          dotnet-version: "10.0.x"
 
       - name: Build Project
         run: dotnet build ./src/Vip.DynamicFilter.sln --configuration Release -p:Version=$VERSION_PROJECT
