@@ -47,19 +47,19 @@ var addresses = Seed.Addresses;
 app.MapGet("/", () => "Vip.DynamicFilter Demo API — consulte /swagger para testar.");
 
 // Lista todos os clientes
-app.MapGet("/clients", () => clients).WithOpenApi();
+app.MapGet("/clients", () => clients);
 
 // Busca cliente por Id
-app.MapGet("/clients/{id:guid}", (Guid id) => clients.FirstOrDefault(x => x.ClientId == id)).WithOpenApi();
+app.MapGet("/clients/{id:guid}", (Guid id) => clients.FirstOrDefault(x => x.ClientId == id));
 
 // Aplica filtro + ordenação + paginação e retorna FilterResponse<T> (com total de registros)
-app.MapPost("/clients", (FilterRequest filter) => clients.GetFilterResponse(filter)).WithOpenApi();
+app.MapPost("/clients", (FilterRequest filter) => clients.GetFilterResponse(filter));
 
 // Aplica filtro + ordenação + paginação e retorna apenas a lista (IQueryable materializado)
-app.MapPost("/clients/query", (FilterRequest filter) => clients.ApplyFilterRequest(filter).ToList()).WithOpenApi();
+app.MapPost("/clients/query", (FilterRequest filter) => clients.ApplyFilterRequest(filter).ToList());
 
 // Aplica filtro sobre os endereços (demonstra uso com outro tipo)
-app.MapPost("/addresses", (FilterRequest filter) => addresses.GetFilterResponse(filter)).WithOpenApi();
+app.MapPost("/addresses", (FilterRequest filter) => addresses.GetFilterResponse(filter));
 
 #endregion
 
