@@ -48,4 +48,4 @@ jobs:
         run: dotnet pack ./src/Vip.DynamicFilter/Vip.DynamicFilter.csproj --configuration Release -p:Version=$VERSION_PACKAGE
 
       - name: Publish Package
-        run: dotnet nuget push ./src/Vip.DynamicFilter/bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_TOKEN }}
+        run: dotnet nuget push ./src/Vip.DynamicFilter/bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json
