@@ -72,6 +72,35 @@ public class OrderTests
         Assert.NotEmpty(filteredResult);
     }
 
+    [Theory]
+    [InlineData("desc", OrderDirection.Desc)]
+    [InlineData(" DESC ", OrderDirection.Desc)]
+    [InlineData("Desc", OrderDirection.Desc)]
+    [InlineData("Asc", OrderDirection.Asc)]
+    [InlineData("", OrderDirection.Asc)]
+    public void OrderTests_Direction_ShouldConvertToken(string direction, OrderDirection expected)
+    {
+        // Arrange / Act
+        var order = new Order {Column = "Age", Direction = direction};
+
+        // Assert
+        Assert.Equal(expected, order.DirectionType);
+    }
+
+    [Fact]
+    public void OrderTests_OrderBy_WhenDirectionIsUnknown_ShouldThrowWithDirectionAndColumn()
+    {
+        // Arrange
+        var order = new Order {Column = "Age", Direction = "decrescente"};
+
+        // Act
+        var exception = Assert.Throws<ArgumentException>(() => Mock.Clients.OrderBy(order));
+
+        // Assert
+        Assert.Contains("'decrescente'", exception.Message);
+        Assert.Contains("'Age'", exception.Message);
+    }
+
     [Fact]
     public void OrderTests_ApplyFilterRequest_WhenJustOrderIsPassed_ShouldReturnOrderedQueryable()
     {

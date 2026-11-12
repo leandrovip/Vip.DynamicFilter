@@ -92,6 +92,7 @@ namespace Vip.DynamicFilter
         private static Expression GetExpressionForFilterField(Expression e, Filter filter, string suffix)
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
+            if (filter.IsOperatorUnknown) throw new ArgumentException($"Operator '{filter.Operator}' is not recognized. Use 'and', 'or' or 'none'.");
             if (filter.OperatorType == Operator.None) return GetExpressionForColumn(e, filter, suffix + "0");
             if (!(filter.Filters?.Any() ?? false)) throw new ArgumentException("Filters with operator type different from Operator.None cannot be empty.");
 
@@ -110,6 +111,7 @@ namespace Vip.DynamicFilter
         private static Expression GetExpressionForColumn(Expression e, Where filter, string suffix)
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
+            if (filter.IsConditionUnknown) throw new ArgumentException($"Condition '{filter.Condition}' is not recognized for column '{filter.Column}'. Use a token (\"=\", \">=\", \"~\", ...) or a WhereCondition name.");
             if (filter.ConditionType == WhereCondition.None || string.IsNullOrWhiteSpace(filter.Column)) throw new ArgumentException("Filter type cannot be None for single filter.");
 
             var columnArray = filter.Column.Split('.');
