@@ -4,7 +4,13 @@ namespace Vip.DynamicFilter
 {
     public class Filter : Where
     {
+        #region Fields
+
         private string _operator;
+        private Operator _operatorType;
+        private bool _operatorUnknown;
+
+        #endregion
 
         #region Constructors
 
@@ -25,8 +31,17 @@ namespace Vip.DynamicFilter
 
         #region Properties
 
-        public Operator OperatorType { get; set; }
         public List<Filter> Filters { get; set; }
+
+        public Operator OperatorType
+        {
+            get => _operatorType;
+            set
+            {
+                _operatorType = value;
+                _operatorUnknown = false;
+            }
+        }
 
         public string Operator
         {
@@ -34,26 +49,40 @@ namespace Vip.DynamicFilter
             set
             {
                 _operator = value;
-                OperatorType = ConvertOperator(_operator);
+
+                var known = TryConvertOperator(value, out var operatorType);
+                OperatorType = operatorType;
+                _operatorUnknown = !known;
             }
         }
+
+        /// <summary>
+        ///     Indica que <see cref="Operator" /> recebeu um valor diferente de "and", "or" e "none".
+        /// </summary>
+        internal bool IsOperatorUnknown => _operatorUnknown;
 
         #endregion
 
         #region Methods
 
-        private Operator ConvertOperator(string value)
+        private static bool TryConvertOperator(string value, out Operator operatorType)
         {
-            if (string.IsNullOrEmpty(value)) return DynamicFilter.Operator.None;
-            value = value.Trim().ToLower();
+            operatorType = DynamicFilter.Operator.None;
+            if (string.IsNullOrWhiteSpace(value)) return true;
 
-            return value switch
+            switch (value.Trim().ToLowerInvariant())
             {
-                "and" => DynamicFilter.Operator.And,
-                "or" => DynamicFilter.Operator.Or,
-                "none" => DynamicFilter.Operator.None,
-                _ => DynamicFilter.Operator.None
-            };
+                case "and":
+                    operatorType = DynamicFilter.Operator.And;
+                    return true;
+                case "or":
+                    operatorType = DynamicFilter.Operator.Or;
+                    return true;
+                case "none":
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         #endregion

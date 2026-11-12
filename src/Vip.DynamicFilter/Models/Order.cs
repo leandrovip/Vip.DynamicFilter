@@ -5,6 +5,8 @@
         #region Fields
 
         private string _direction;
+        private OrderDirection _directionType;
+        private bool _directionUnknown;
 
         #endregion
 
@@ -26,7 +28,16 @@
         #region Properties
 
         public string Column { get; set; }
-        public OrderDirection DirectionType { get; set; }
+
+        public OrderDirection DirectionType
+        {
+            get => _directionType;
+            set
+            {
+                _directionType = value;
+                _directionUnknown = false;
+            }
+        }
 
         public string Direction
         {
@@ -34,25 +45,37 @@
             set
             {
                 _direction = value;
-                DirectionType = ConvertDirection(_direction);
+
+                var known = TryConvertDirection(value, out var directionType);
+                DirectionType = directionType;
+                _directionUnknown = !known;
             }
         }
+
+        /// <summary>
+        ///     Indica que <see cref="Direction" /> recebeu um valor diferente de "asc" e "desc".
+        /// </summary>
+        internal bool IsDirectionUnknown => _directionUnknown;
 
         #endregion
 
         #region Methods
 
-        private OrderDirection ConvertDirection(string value)
+        private static bool TryConvertDirection(string value, out OrderDirection directionType)
         {
-            if (string.IsNullOrEmpty(value)) return OrderDirection.Asc;
-            value = value.Trim().ToLower();
+            directionType = OrderDirection.Asc;
+            if (string.IsNullOrWhiteSpace(value)) return true;
 
-            return value switch
+            switch (value.Trim().ToLowerInvariant())
             {
-                "asc" => OrderDirection.Asc,
-                "desc" => OrderDirection.Desc,
-                _ => OrderDirection.Asc
-            };
+                case "asc":
+                    return true;
+                case "desc":
+                    directionType = OrderDirection.Desc;
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         #endregion

@@ -216,6 +216,64 @@ public class WhereTests
     }
 
     [Fact]
+    public void WhereTests_ApplyFilterRequest_WhenConditionIsUnknown_ShouldThrowWithConditionAndColumn()
+    {
+        // Arrange
+        var request = new FilterRequest
+        {
+            Where = new Filter {Column = "Age", Condition = "maiorque", Value = 14}
+        };
+
+        // Act
+        var exception = Assert.Throws<ArgumentException>(() => Mock.Clients.ApplyFilterRequest(request));
+
+        // Assert
+        Assert.Contains("'maiorque'", exception.Message);
+        Assert.Contains("'Age'", exception.Message);
+    }
+
+    [Fact]
+    public void WhereTests_ApplyFilterRequest_WhenConditionTypeIsSetAfterUnknownCondition_ShouldUseConditionType()
+    {
+        // Arrange
+        var request = new FilterRequest
+        {
+            Where = new Filter {Column = "Age", Condition = "maiorque", ConditionType = WhereCondition.GreaterThan, Value = 14}
+        };
+
+        // Act
+        var filteredResult = Mock.Clients.ApplyFilterRequest(request);
+        var normalResult = Mock.Clients.Where(x => x.Age > 14);
+
+        // Assert
+        Helper.EnumarableAreEqual(filteredResult, normalResult);
+    }
+
+    [Fact]
+    public void WhereTests_ApplyFilterRequest_WhenOperatorIsUnknown_ShouldThrowWithOperator()
+    {
+        // Arrange
+        var request = new FilterRequest
+        {
+            Where = new Filter
+            {
+                Operator = "xor",
+                Filters = new List<Filter>
+                {
+                    new("Age", WhereCondition.GreaterThanOrEqual, 14),
+                    new("Age", WhereCondition.LessThanOrEqual, 25)
+                }
+            }
+        };
+
+        // Act
+        var exception = Assert.Throws<ArgumentException>(() => Mock.Clients.ApplyFilterRequest(request));
+
+        // Assert
+        Assert.Contains("'xor'", exception.Message);
+    }
+
+    [Fact]
     public void WhereTests_ApplyFilterRequest_WhenWhereIsNull()
     {
         // Arrange

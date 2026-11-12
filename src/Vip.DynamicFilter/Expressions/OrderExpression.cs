@@ -13,35 +13,27 @@ namespace Vip.DynamicFilter
 
         #endregion
 
-        #region Available Types Collection
-
-        #endregion
-
         #region Runtime Methods
 
-        private static readonly MethodInfo QueryableOrderBy = _queryableType.GetRuntimeMethods().Single(
-            method => method.Name == "OrderBy"
-                      && method.IsGenericMethodDefinition
-                      && method.GetGenericArguments().Length == 2
-                      && method.GetParameters().Length == 2);
+        private static readonly MethodInfo QueryableOrderBy = _queryableType.GetRuntimeMethods().Single(method => method.Name == "OrderBy"
+                                                                                                                  && method.IsGenericMethodDefinition
+                                                                                                                  && method.GetGenericArguments().Length == 2
+                                                                                                                  && method.GetParameters().Length == 2);
 
-        private static readonly MethodInfo QueryableOrderByDescending = _queryableType.GetRuntimeMethods().Single(
-            method => method.Name == "OrderByDescending"
-                      && method.IsGenericMethodDefinition
-                      && method.GetGenericArguments().Length == 2
-                      && method.GetParameters().Length == 2);
+        private static readonly MethodInfo QueryableOrderByDescending = _queryableType.GetRuntimeMethods().Single(method => method.Name == "OrderByDescending"
+                                                                                                                            && method.IsGenericMethodDefinition
+                                                                                                                            && method.GetGenericArguments().Length == 2
+                                                                                                                            && method.GetParameters().Length == 2);
 
-        private static readonly MethodInfo QueryableThenBy = _queryableType.GetRuntimeMethods().Single(
-            method => method.Name == "ThenBy"
-                      && method.IsGenericMethodDefinition
-                      && method.GetGenericArguments().Length == 2
-                      && method.GetParameters().Length == 2);
+        private static readonly MethodInfo QueryableThenBy = _queryableType.GetRuntimeMethods().Single(method => method.Name == "ThenBy"
+                                                                                                                 && method.IsGenericMethodDefinition
+                                                                                                                 && method.GetGenericArguments().Length == 2
+                                                                                                                 && method.GetParameters().Length == 2);
 
-        private static readonly MethodInfo QueryableThenByDescending = _queryableType.GetRuntimeMethods().Single(
-            method => method.Name == "ThenByDescending"
-                      && method.IsGenericMethodDefinition
-                      && method.GetGenericArguments().Length == 2
-                      && method.GetParameters().Length == 2);
+        private static readonly MethodInfo QueryableThenByDescending = _queryableType.GetRuntimeMethods().Single(method => method.Name == "ThenByDescending"
+                                                                                                                           && method.IsGenericMethodDefinition
+                                                                                                                           && method.GetGenericArguments().Length == 2
+                                                                                                                           && method.GetParameters().Length == 2);
 
         #endregion
 
@@ -50,6 +42,7 @@ namespace Vip.DynamicFilter
         public static IOrderedQueryable<T> GetOrderedQueryable<T>(this Order sort, IQueryable<T> data, OrderStep step)
         {
             if (sort == null) throw new ArgumentNullException(nameof(sort));
+            if (sort.IsDirectionUnknown) throw new ArgumentException($"Direction '{sort.Direction}' is not recognized for column '{sort.Column}'. Use 'asc' or 'desc'.");
             var type = typeof(T);
 
             var arg = Expression.Parameter(type, "x" + step);
