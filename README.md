@@ -221,6 +221,8 @@ var result = clients.ApplyFilterRequest(request);
 | `isnullorempty` | `WhereCondition.IsNullOrEmpty` | Nula ou vazia | string |
 | `notnullorempty` | `WhereCondition.IsNotNullOrEmpty` | Não nula e não vazia | string |
 
+`condition` aceita o token ou o nome do enum (`">="` ou `"GreaterThanOrEqual"`), sem diferenciar maiúsculas. Valor não reconhecido lança `ArgumentException`.
+
 Exemplos de cada condição em C# e JSON na página [`docs/filtros.md`](docs/filtros.md).
 
 ### 3. Filtros compostos (`AND` / `OR`)
@@ -511,17 +513,17 @@ var app = builder.Build();
 var clients = Seed.Clients;       // List<Client> com endereços, enums e datas
 var addresses = Seed.Addresses;   // List<Address> (para demonstrar outro tipo)
 
-app.MapGet("/clients", () => clients).WithOpenApi();
-app.MapGet("/clients/{id:guid}", (Guid id) => clients.FirstOrDefault(x => x.ClientId == id)).WithOpenApi();
+app.MapGet("/clients", () => clients);
+app.MapGet("/clients/{id:guid}", (Guid id) => clients.FirstOrDefault(x => x.ClientId == id));
 
 // Retorna FilterResponse<T> (com total de registros)
-app.MapPost("/clients", (FilterRequest filter) => clients.GetFilterResponse(filter)).WithOpenApi();
+app.MapPost("/clients", (FilterRequest filter) => clients.GetFilterResponse(filter));
 
 // Retorna apenas a lista materializada
-app.MapPost("/clients/query", (FilterRequest filter) => clients.ApplyFilterRequest(filter).ToList()).WithOpenApi();
+app.MapPost("/clients/query", (FilterRequest filter) => clients.ApplyFilterRequest(filter).ToList());
 
 // Filtro sobre outro tipo (Address)
-app.MapPost("/addresses", (FilterRequest filter) => addresses.GetFilterResponse(filter)).WithOpenApi();
+app.MapPost("/addresses", (FilterRequest filter) => addresses.GetFilterResponse(filter));
 
 app.Run();
 ```
@@ -541,6 +543,13 @@ app.Run();
 - [`docs/serializacao-json.md`](docs/serializacao-json.md) — deserialização JSON.
 - [`docs/ef-core.md`](docs/ef-core.md) — uso com EF Core.
 - [`docs/limites-e-comportamentos.md`](docs/limites-e-comportamentos.md) — exceções e edge cases.
+- [`docs/matriz-de-comportamentos.md`](docs/matriz-de-comportamentos.md) — matriz condição × tipo, cultura e exceções verificadas.
+- [`docs/referencia-api.md`](docs/referencia-api.md) — assinaturas completas da API pública.
+- [`docs/seguranca-e-performance.md`](docs/seguranca-e-performance.md) — cuidados ao expor filtros em APIs.
+- [`docs/arquitetura.md`](docs/arquitetura.md) — funcionamento interno (expression trees).
+- [`docs/desenvolvimento.md`](docs/desenvolvimento.md) — build, testes, CI e publicação.
+- [`docs/demo-api.md`](docs/demo-api.md) — DemoApi e coleção Postman.
+- [`CHANGELOG.md`](CHANGELOG.md) — histórico de versões.
 
 ## Licença
 

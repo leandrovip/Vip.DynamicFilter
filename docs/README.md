@@ -18,6 +18,17 @@ Documentação de referência da biblioteca [Vip.DynamicFilter](../README.md).
 | [serializacao-json.md](serializacao-json.md) | Deserialização JSON (`System.Text.Json` / `Newtonsoft.Json`) |
 | [ef-core.md](ef-core.md) | Uso com EF Core |
 | [limites-e-comportamentos.md](limites-e-comportamentos.md) | Exceções, defaults e edge cases |
+| [matriz-de-comportamentos.md](matriz-de-comportamentos.md) | Matriz condição × tipo, cultura, navegação e exceções verificadas em execução |
+| [referencia-api.md](referencia-api.md) | Assinaturas completas da API pública |
+| [seguranca-e-performance.md](seguranca-e-performance.md) | Cuidados ao expor `FilterRequest` em APIs; custo e tradução das consultas |
+
+### Para quem mantém a biblioteca
+
+| Página | Conteúdo |
+|---|---|
+| [arquitetura.md](arquitetura.md) | Pipeline interno de expression trees e decisões de projeto |
+| [desenvolvimento.md](desenvolvimento.md) | Ambiente, build, testes, CI e publicação NuGet |
+| [demo-api.md](demo-api.md) | DemoApi (endpoints, seed, execução) e coleção Postman |
 
 ## Convenções dos exemplos
 

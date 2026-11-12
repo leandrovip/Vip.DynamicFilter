@@ -707,6 +707,90 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Filter by Condition Enum Name",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"where\": {\r\n        \"operator\": \"And\",\r\n        \"filters\": [\r\n            {\r\n                \"column\": \"age\",\r\n                \"condition\": \"GreaterThanOrEqual\",\r\n                \"value\": 14\r\n            },\r\n            {\r\n                \"column\": \"age\",\r\n                \"condition\": \"LessThanOrEqual\",\r\n                \"value\": 25\r\n            }\r\n        ]\r\n    },\r\n    \"orderBy\": [\r\n        {\r\n            \"column\": \"age\",\r\n            \"direction\": \"Desc\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Birthday Range (Enum Name)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"where\": {\r\n        \"operator\": \"And\",\r\n        \"filters\": [\r\n            {\r\n                \"column\": \"birthday\",\r\n                \"condition\": \"GreaterThanOrEqual\",\r\n                \"value\": \"1990-01-01\"\r\n            },\r\n            {\r\n                \"column\": \"birthday\",\r\n                \"condition\": \"LessThan\",\r\n                \"value\": \"2011-01-01\"\r\n            }\r\n        ]\r\n    },\r\n    \"orderBy\": [\r\n        {\r\n            \"column\": \"birthday\",\r\n            \"direction\": \"asc\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid Condition (error)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"where\": {\r\n        \"column\": \"age\",\r\n        \"condition\": \"maiorque\",\r\n        \"value\": 14\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7165/clients",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7165",
+					"path": [
+						"clients"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

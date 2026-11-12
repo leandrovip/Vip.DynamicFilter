@@ -12,6 +12,8 @@ As classes `Where`, `Filter` e `Order` possuem **propriedades string** (`Conditi
 | `Operator` | `"and"`, `"or"`, `"none"` | `Operator` |
 | `Direction` | `"asc"`, `"desc"` | `OrderDirection` |
 
+As três propriedades ignoram maiúsculas/minúsculas e espaços nas pontas (`"AND"`, `" desc "`, `"ISNULL"`). `Condition` aceita também o **nome do enum** (`"GreaterThanOrEqual"` equivale a `">="`). Um valor não reconhecido lança `ArgumentException` no momento em que o filtro ou a ordenação é aplicado, com o valor recebido na mensagem.
+
 ## System.Text.Json
 
 ```csharp
